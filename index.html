@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spartan Trail - EcoTracker MVP</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; background: #f4f7f6; }
+        .tab-btn { padding: 10px 20px; cursor: pointer; background: #ddd; border: none; font-size: 16px; border-radius: 5px 5px 0 0; }
+        .tab-btn.active { background: #2e7d32; color: white; }
+        .tab-content { display: none; background: white; padding: 20px; border-radius: 0 5px 5px 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .tab-content.active { display: block; }
+        #reader { width: 100%; max-width: 400px; margin: auto; }
+        .input-group { margin-bottom: 15px; }
+        .input-group input { width: 100%; padding: 10px; box-sizing: border-box; font-size: 16px; }
+        .btn { padding: 10px 15px; background: #2e7d32; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px;}
+        .log-box { background: #eee; padding: 10px; margin-top: 15px; border-radius: 5px; font-size: 14px; min-height: 50px; }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align:center; color: #2e7d32;">Spartan Trail EcoTracker</h2>
+    
+    <div>
+        <button class="tab-btn active" onclick="switchTab('kiosk')">Entry Kiosk</button>
+        <button class="tab-btn" onclick="switchTab('report')">Report Trash</button>
+    </div>
+
+    <div id="kiosk" class="tab-content active">
+        <h3>Hiker Check-In</h3>
+        <p>Register items to keep the trail clean.</p>
+        
+        <div class="input-group">
+            <input type="text" id="hikerName" placeholder="Enter Hiker Name">
+        </div>
+        
+        <button class="btn" onclick="startScanner('checkin')">Open Camera & Scan Item</button>
+        <div id="checkin-log" class="log-box">Awaiting scan...</div>
+    </div>
+
+    <div id="report" class="tab-content">
+        <h3>Report Found Trash</h3>
+        <p>Scan a barcode to identify the owner.</p>
+        
+        <button class="btn" onclick="startScanner('report')">Open Camera & Scan Found Item</button>
+        <div id="report-log" class="log-box">Awaiting scan...</div>
+    </div>
+
+    <div id="reader" style="margin-top: 20px;"></div>
+
+    <script>
+        // Using LocalStorage as a temporary "Database" for the MVP demonstration
+        let html5QrcodeScanner;
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+            
+            if(html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+            }
+        }
+
+        function startScanner(mode) {
+            // Initialize the camera scanner
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", { fps: 10, qrbox: {width: 250, height: 100} }, /* verbose= */ false);
+            
+            html5QrcodeScanner.render((decodedText) => {
+                html5QrcodeScanner.clear(); // Stop scanning after successful read
+                
+                if (mode === 'checkin') {
+                    handleCheckIn(decodedText);
+                } else if (mode === 'report') {
+                    handleReport(decodedText);
+                }
+            }, (error) => {
+                // Background errors are ignored during scanning
+            });
+        }
+
+        function handleCheckIn(barcode) {
+            const name = document.getElementById('hikerName').value || "Anonymous Hiker";
+            
+            // Save to LocalStorage (Simulating a Firebase save)
+            localStorage.setItem(barcode, JSON.stringify({ name: name, time: new Date().toLocaleTimeString() }));
+            
+            document.getElementById('checkin-log').innerHTML = 
+                `<strong>Success:</strong> Linked barcode [${barcode}] to ${name}.`;
+            document.getElementById('hikerName').value = '';
+        }
+
+        function handleReport(barcode) {
+            // Retrieve from LocalStorage (Simulating a database query)
+            const data = localStorage.getItem(barcode);
+            const logBox = document.getElementById('report-log');
+            
+            if (data) {
+                const hikerInfo = JSON.parse(data);
+                logBox.innerHTML = `<strong>Match Found!</strong><br>
+                                    Item [${barcode}] belongs to: <strong>${hikerInfo.name}</strong><br>
+                                    Checked in at: ${hikerInfo.time}<br><br>
+                                    <em>*Simulated alert sent to Barangay*</em>`;
+            } else {
+                logBox.innerHTML = `<strong>No Match:</strong> Barcode [${barcode}] is not in the system.`;
+            }
+        }
+    </script>
+</body>
+</html>
