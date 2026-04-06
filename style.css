@@ -1,0 +1,17 @@
+.app-container{
+  max-width: 500px;
+  padding: 20px;
+  border: 5px;
+  text-align: center;
+  margin: 0 auto;
+
+}
+.panel{
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f1f8e9;
+  border-radius: 8px;
+}
+.hidden{
+  display: none;
+}

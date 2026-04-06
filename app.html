@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Walay Bilin</title>
+</head>
+
+<body>
+  <main class="app-container">
+    <header>
+      <h1>Walay Bilin Trash Tracker</h1>
+    </header>
+
+    <section id="mode-register" class="panel">
+      <button class="btn_goto_report">Report Trash</button>
+      <input type="text" class="enter_name" placeholder="Enter Hiker Name">
+      <br></br>
+      <label>Scan Item Barcode:</label>
+      <input type="file" accept="image/*" capture="environment">
+    </section>
+    
+    <section id="report" class="panel hidden">
+      <button class="btn_goto_register">Register</button>
+      <h2>Report Fresh Trash:</h2>
+      <input type="file" accept="image/*" capture="environment">
+    </section>
+
+    
+  </main>
+<script src="app.js"></script>
+</body>
+
+</html>
