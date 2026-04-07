@@ -12,3 +12,14 @@ goToRegisterbtn.addEventListener('click', function(){
   report.classList.add('hidden');
   moderegister.classList.remove('hidden');
 })
+
+function onScanSuccess (decodedText, decodedResult) {
+document.getElementById('scan-result-register').innerText = decodedText;
+html5QrcodeScanner.clear();
+
+}
+let html5QrcodeScanner = new Html5QrcodeScanner("reader-register", {
+  fps: 10, qrbox: {width:250, height:250}},
+);
+
+html5QrcodeScanner.render(onScanSuccess);
