@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+
+  <title>Walay Bilin</title>
+</head>
+
+<body>
+  <main class="app-container">
+    <div class="title">
+      <header>
+        <h1>Walay Bilin Trash Tracker</h1>
+      </header>
+    </div>
+    <div class="button-container">
+      <button class="btn_goto_register">Register</button>
+      <button class="btn_goto_report">Report Trash</button>
+    </div>
+
+    <div class="tabs">
+      <section id="mode-register" class="panel">
+        <div><input type="text" class="enter_name" placeholder="Enter Hiker Name"></div>
+        <br></br>
+        <div>
+          <label>Scan Item Barcode:</label>
+          <div id="reader-register" style="width: 300px;"></div>
+          <p>Detected Barcode: <span id="scan-result-register">Waiting...</span></p>
+        </div>
+
+      </section>
+    </div>
+    <div>
+      <section id="report" class="panel hidden">
+
+        <h2>Report Fresh Trash:</h2>
+        <div id="reader-report" style="width: 300px;"></div>
+        <p>Detected Barcode: <span id="scan-result-report">Waiting...</span></p>
+      </section>
+    </div>
+
+  </main>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
